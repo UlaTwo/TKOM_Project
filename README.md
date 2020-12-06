@@ -1,8 +1,7 @@
 # TKOM_Project
 #### Uruchamianie projektu:
 
-- Przetestowania działania leksera(po zmianie ścieżki na ./tkom.Test):
->dotnet test
+- Przetestowania działania leksera(po zmianie ścieżki na ./tkom.Test): >dotnet test
 
 
 - Uruchomienie leksera (po zmianie ścieżki na ./tkom):
