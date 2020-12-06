@@ -13,5 +13,8 @@ lub
 
 >dotnet run -tls string
 
+po zmianie ścieżki na ./tkom
+
 Uruchomienie w trybie działania -tls skutkuje wypisaniem w konsoli poszczególnych tokenów wejściowego string'a.
+
 Natomiast uruchomienie w trybie działania -tlf skutkuje utworzeniem pliku o nazwie nazwa_pliku_testLexer.txt w tej samej ścieżce, co plik wejściowy.
