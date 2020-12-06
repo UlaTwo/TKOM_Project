@@ -1,15 +1,16 @@
 # TKOM_Project
 #### Uruchamianie projektu:
 
-- Przetestowania działania leksera(po zmianie ścieżki na ./tkom.Test): >dotnet test
+- Przetestowania działania leksera(po zmianie ścieżki na ./tkom.Test): 
+  >dotnet test
 
 
 - Uruchomienie leksera (po zmianie ścieżki na ./tkom):
->dotnet run -tlf ścieżka_do_pliku/nazwa_pliku.txt
+  >dotnet run -tlf ścieżka_do_pliku/nazwa_pliku.txt
 
-lub
+  lub
 
->dotnet run -tls string
+  >dotnet run -tls string
 
 
 
