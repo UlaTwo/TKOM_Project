@@ -1,0 +1,535 @@
+Token type: Class
+value: class
+line: 1
+col: 1
+
+Token type: Identifier
+value: klasa1
+line: 1
+col: 7
+
+Token type: ParenthesesLeft
+value: {
+line: 1
+col: 14
+
+Token type: Turtle
+value: turtle
+line: 2
+col: 5
+
+Token type: Identifier
+value: t1
+line: 2
+col: 12
+
+Token type: Semicolon
+value: ;
+line: 2
+col: 14
+
+Token type: IntegerId
+value: int
+line: 3
+col: 5
+
+Token type: Identifier
+value: x
+line: 3
+col: 9
+
+Token type: Semicolon
+value: ;
+line: 3
+col: 10
+
+Token type: Def
+value: def
+line: 4
+col: 5
+
+Token type: Identifier
+value: initKlasa1
+line: 4
+col: 9
+
+Token type: BraceLeft
+value: (
+line: 4
+col: 19
+
+Token type: BraceRight
+value: )
+line: 4
+col: 20
+
+Token type: ParenthesesLeft
+value: {
+line: 4
+col: 21
+
+Token type: Identifier
+value: x
+line: 5
+col: 9
+
+Token type: Assignment
+value: =
+line: 5
+col: 11
+
+Token type: Integer
+value: 15
+line: 5
+col: 13
+
+Token type: Semicolon
+value: ;
+line: 5
+col: 15
+
+Token type: Identifier
+value: t1
+line: 6
+col: 9
+
+Token type: ParenthesesLeft
+value: {
+line: 6
+col: 11
+
+Token type: Identifier
+value: create
+line: 7
+col: 13
+
+Token type: BraceLeft
+value: (
+line: 7
+col: 19
+
+Token type: Identifier
+value: x
+line: 7
+col: 20
+
+Token type: Comma
+value: ,
+line: 7
+col: 21
+
+Token type: Identifier
+value: x
+line: 7
+col: 22
+
+Token type: Comma
+value: ,
+line: 7
+col: 23
+
+Token type: Identifier
+value: red
+line: 7
+col: 24
+
+Token type: BraceRight
+value: )
+line: 7
+col: 27
+
+Token type: Semicolon
+value: ;
+line: 7
+col: 28
+
+Token type: ParenthesesRight
+value: }
+line: 8
+col: 9
+
+Token type: ParenthesesRight
+value: }
+line: 9
+col: 5
+
+Token type: Def
+value: def
+line: 11
+col: 5
+
+Token type: Identifier
+value: rysuj
+line: 11
+col: 9
+
+Token type: BraceLeft
+value: (
+line: 11
+col: 14
+
+Token type: IntegerId
+value: int
+line: 11
+col: 15
+
+Token type: Identifier
+value: a
+line: 11
+col: 19
+
+Token type: BraceRight
+value: )
+line: 11
+col: 20
+
+Token type: ParenthesesLeft
+value: {
+line: 11
+col: 21
+
+Token type: Identifier
+value: t1
+line: 12
+col: 9
+
+Token type: ParenthesesLeft
+value: {
+line: 12
+col: 11
+
+Token type: Identifier
+value: forward
+line: 13
+col: 13
+
+Token type: BraceLeft
+value: (
+line: 13
+col: 20
+
+Token type: Identifier
+value: a
+line: 13
+col: 21
+
+Token type: BraceRight
+value: )
+line: 13
+col: 22
+
+Token type: Semicolon
+value: ;
+line: 13
+col: 23
+
+Token type: Identifier
+value: rotate
+line: 14
+col: 13
+
+Token type: BraceLeft
+value: (
+line: 14
+col: 19
+
+Token type: Integer
+value: 45
+line: 14
+col: 20
+
+Token type: BraceRight
+value: )
+line: 14
+col: 22
+
+Token type: Semicolon
+value: ;
+line: 14
+col: 23
+
+Token type: Identifier
+value: forward
+line: 15
+col: 13
+
+Token type: BraceLeft
+value: (
+line: 15
+col: 20
+
+Token type: Identifier
+value: a
+line: 15
+col: 21
+
+Token type: BraceRight
+value: )
+line: 15
+col: 22
+
+Token type: Semicolon
+value: ;
+line: 15
+col: 23
+
+Token type: ParenthesesRight
+value: }
+line: 16
+col: 9
+
+Token type: ParenthesesRight
+value: }
+line: 17
+col: 5
+
+Token type: ParenthesesRight
+value: }
+line: 18
+col: 1
+
+Token type: Def
+value: def
+line: 20
+col: 1
+
+Token type: IntegerId
+value: int
+line: 20
+col: 5
+
+Token type: Identifier
+value: dodaj
+line: 20
+col: 9
+
+Token type: BraceLeft
+value: (
+line: 20
+col: 14
+
+Token type: IntegerId
+value: int
+line: 20
+col: 15
+
+Token type: Identifier
+value: b
+line: 20
+col: 19
+
+Token type: BraceRight
+value: )
+line: 20
+col: 20
+
+Token type: ParenthesesLeft
+value: {
+line: 20
+col: 21
+
+Token type: Return
+value: return
+line: 21
+col: 5
+
+Token type: Identifier
+value: b
+line: 21
+col: 12
+
+Token type: PlusOperator
+value: +
+line: 21
+col: 13
+
+Token type: Identifier
+value: b
+line: 21
+col: 14
+
+Token type: Semicolon
+value: ;
+line: 21
+col: 15
+
+Token type: ParenthesesRight
+value: }
+line: 22
+col: 1
+
+Token type: Def
+value: def
+line: 24
+col: 1
+
+Token type: Identifier
+value: go
+line: 24
+col: 5
+
+Token type: BraceLeft
+value: (
+line: 24
+col: 7
+
+Token type: StringId
+value: string
+line: 24
+col: 8
+
+Token type: Identifier
+value: single
+line: 24
+col: 15
+
+Token type: BraceRight
+value: )
+line: 24
+col: 21
+
+Token type: ParenthesesLeft
+value: {
+line: 24
+col: 22
+
+Token type: Class
+value: class
+line: 25
+col: 5
+
+Token type: Identifier
+value: klasa1
+line: 25
+col: 11
+
+Token type: Identifier
+value: obiektK1
+line: 25
+col: 18
+
+Token type: Semicolon
+value: ;
+line: 25
+col: 26
+
+Token type: IntegerId
+value: int
+line: 26
+col: 5
+
+Token type: Identifier
+value: y
+line: 26
+col: 9
+
+Token type: Semicolon
+value: ;
+line: 26
+col: 10
+
+Token type: Identifier
+value: y
+line: 27
+col: 5
+
+Token type: Assignment
+value: =
+line: 27
+col: 6
+
+Token type: Integer
+value: 6
+line: 27
+col: 7
+
+Token type: Semicolon
+value: ;
+line: 27
+col: 8
+
+Token type: Identifier
+value: obiektK1
+line: 29
+col: 5
+
+Token type: ParenthesesLeft
+value: {
+line: 29
+col: 13
+
+Token type: Identifier
+value: initKlasa1
+line: 30
+col: 9
+
+Token type: BraceLeft
+value: (
+line: 30
+col: 19
+
+Token type: BraceRight
+value: )
+line: 30
+col: 20
+
+Token type: Semicolon
+value: ;
+line: 30
+col: 21
+
+Token type: Identifier
+value: rysuj
+line: 31
+col: 9
+
+Token type: BraceLeft
+value: (
+line: 31
+col: 14
+
+Token type: Identifier
+value: dodaj
+line: 31
+col: 15
+
+Token type: BraceLeft
+value: (
+line: 31
+col: 20
+
+Token type: Identifier
+value: y
+line: 31
+col: 21
+
+Token type: BraceRight
+value: )
+line: 31
+col: 22
+
+Token type: BraceRight
+value: )
+line: 31
+col: 23
+
+Token type: Semicolon
+value: ;
+line: 31
+col: 24
+
+Token type: ParenthesesRight
+value: }
+line: 32
+col: 5
+
+Token type: ParenthesesRight
+value: }
+line: 33
+col: 1
+
+Token type: EOT
+value: 
+line: 33
+col: 2
+

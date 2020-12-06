@@ -1,0 +1,34 @@
+class klasa1 {
+    turtle t1;
+    int x;
+    def initKlasa1(){
+        x = 15;
+        t1{
+            create(x,x,red);            
+        }
+    }
+
+    def rysuj(int a){
+        t1{
+            forward(a);
+            rotate(45);
+            forward(a);
+        }
+    }
+}
+
+def int dodaj(int b){
+    return b+b;
+}
+
+def go(string gif){
+    class klasa1 obiektK1;
+    int y;
+    y=6;
+    save();
+    obiektK1{
+        initKlasa1();
+        rysuj(dodaj(y));
+    }
+    save();
+}

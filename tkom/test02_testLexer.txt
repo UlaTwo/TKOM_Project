@@ -1,0 +1,21 @@
+Token type: If
+value: if
+line: 1
+col: 1
+
+Token type: BraceLeft
+value: (
+line: 1
+col: 3
+
+Token type: Identifier
+value: x
+line: 1
+col: 5
+
+Token type: GreaterOperator
+value: >
+line: 1
+col: 7
+
+Exception: Too long identifier, in line: 1

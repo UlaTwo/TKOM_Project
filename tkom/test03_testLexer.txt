@@ -1,0 +1,11 @@
+Token type: Identifier
+value: nazwa1234
+line: 1
+col: 1
+
+Token type: Assignment
+value: =
+line: 1
+col: 11
+
+Exception: Too long integer, in line: 1
