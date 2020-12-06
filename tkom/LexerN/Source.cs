@@ -84,7 +84,7 @@ namespace tkom.LexerN
                  character = ' ';
                 isEnd = true;
             }
-            else character =  Convert.ToChar(reader.Read()); ///?????????/
+            else character =  Convert.ToChar(reader.Read());
 
             if (character == '\n')
             {
