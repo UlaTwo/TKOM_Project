@@ -3,17 +3,11 @@ using Xunit;
 using tkom.LexerN;
 using System.IO;
 
-namespace tkom.Test{
-    public class LexerUTests{
-
-        private static Lexer PrepareLexer(string s)
-        {
-            var source = new StringSource(s);
-            var lexer = new Lexer(source);
-            return lexer;
-        }
-
-        private static void ActAndValidate_ListOfTokens( Lexer lekser, params TokenType[] expectedTokenTypes)
+namespace tkom.Test
+{
+    public class LexerUTests
+    {
+        private static void ActAndValidate_ListOfTokens(Lexer lekser, params TokenType[] expectedTokenTypes)
         {
             foreach (var tokenType in expectedTokenTypes)
             {
@@ -24,295 +18,480 @@ namespace tkom.Test{
 
 
         [Fact]
-        public void EmptySource_TokenIsEof(){
-            var lekser = PrepareLexer("");
-            lekser.nextToken();
-            Assert.Equal(TokenType.EOT ,lekser.Token.Type );
+        public void EmptySource_TokenIsEof()
+        {
+            string s = "";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.EOT, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void OnlyWhiteSigns_TokenIsEof(){
-            var lekser = PrepareLexer("     \n\n\n");
-            lekser.nextToken();
-            Assert.Equal(TokenType.EOT ,lekser.Token.Type );
+        public void OnlyWhiteSigns_TokenIsEof()
+        {
+            string s = "     \n\n\n";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.EOT, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void SourceValidateString1(){
-            var lekser = PrepareLexer("def funkcja(int i)");
-            ActAndValidate_ListOfTokens(lekser, 
-            (TokenType.Def),
-             (TokenType.Identifier), 
-             (TokenType.BraceLeft), 
-             (TokenType.IntegerId), 
-             (TokenType.Identifier),
-              (TokenType.BraceRight));
+        public void SourceValidateString1()
+        {
+            string s = "def funkcja(int i)";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+
+                ActAndValidate_ListOfTokens(lekser,
+                (TokenType.Def),
+                 (TokenType.Identifier),
+                 (TokenType.BraceLeft),
+                 (TokenType.IntegerId),
+                 (TokenType.Identifier),
+                  (TokenType.BraceRight));
+            }
         }
 
         [Fact]
-        public void SourceValidateString2(){
-            var lekser = PrepareLexer("while  \n (x!=23){funkcja(x);}");
-            ActAndValidate_ListOfTokens(lekser, 
-            (TokenType.While),
-             (TokenType.BraceLeft), 
-             (TokenType.Identifier), 
-             (TokenType.InequalityOperator), 
-             (TokenType.Integer),
-             (TokenType.BraceRight),
-             (TokenType.ParenthesesLeft), 
-             (TokenType.Identifier), 
-             (TokenType.BraceLeft), 
-             (TokenType.Identifier), 
-             (TokenType.BraceRight),
-             (TokenType.Semicolon), 
-             (TokenType.ParenthesesRight)
-             );
-        }
+        public void SourceValidateString2()
+        {
+            string s = "while  \n (x!=23){funkcja(x);}";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
 
-         [Fact]
-        public void SourceValidateString3(){
-            var lekser = PrepareLexer("if (x<23\n ^ red+funkcja()\n )");
-            ActAndValidate_ListOfTokens(lekser, 
-            (TokenType.If),
-             (TokenType.BraceLeft), 
-             (TokenType.Identifier), 
-             (TokenType.LessOperator), 
-             (TokenType.Integer),
-             (TokenType.AndOperator),
-             (TokenType.Identifier), 
-             (TokenType.PlusOperator), 
-             (TokenType.Identifier), 
-             (TokenType.BraceLeft), 
-             (TokenType.BraceRight),
-             (TokenType.BraceRight)
-             );
+                ActAndValidate_ListOfTokens(lekser,
+                (TokenType.While),
+                 (TokenType.BraceLeft),
+                 (TokenType.Identifier),
+                 (TokenType.InequalityOperator),
+                 (TokenType.Integer),
+                 (TokenType.BraceRight),
+                 (TokenType.ParenthesesLeft),
+                 (TokenType.Identifier),
+                 (TokenType.BraceLeft),
+                 (TokenType.Identifier),
+                 (TokenType.BraceRight),
+                 (TokenType.Semicolon),
+                 (TokenType.ParenthesesRight)
+                 );
+            }
         }
 
         [Fact]
-        public void TokenIsInteger(){
-            var lekser = PrepareLexer("123");
-            lekser.nextToken();
-            Assert.Equal(TokenType.Integer ,lekser.Token.Type );
-            Assert.Equal("123" , lekser.Token.Value );
+        public void SourceValidateString3()
+        {
+            string s = "if (x<23\n ^ red+funkcja()\n )";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+
+                ActAndValidate_ListOfTokens(lekser,
+                (TokenType.If),
+                 (TokenType.BraceLeft),
+                 (TokenType.Identifier),
+                 (TokenType.LessOperator),
+                 (TokenType.Integer),
+                 (TokenType.AndOperator),
+                 (TokenType.Identifier),
+                 (TokenType.PlusOperator),
+                 (TokenType.Identifier),
+                 (TokenType.BraceLeft),
+                 (TokenType.BraceRight),
+                 (TokenType.BraceRight)
+                 );
+            }
         }
 
         [Fact]
-        public void TokenIsIdentifier(){
-            var lekser = PrepareLexer("nazwa123");
-            lekser.nextToken();
-            Assert.Equal(TokenType.Identifier ,lekser.Token.Type );
-            Assert.Equal("nazwa123" , lekser.Token.Value );
+        public void TokenIsInteger()
+        {
+            string s = "123";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.Integer, lekser.Token.Type);
+                Assert.Equal("123", lekser.Token.Value);
+            }
         }
 
         [Fact]
-        public void TokenIsUndefined(){
-            var lekser = PrepareLexer("$");
-            lekser.nextToken();
-            Assert.Equal(TokenType.Undefined ,lekser.Token.Type );
+        public void TokenIsIdentifier()
+        {
+            string s = "nazwa123";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.Identifier, lekser.Token.Type);
+                Assert.Equal("nazwa123", lekser.Token.Value);
+            }
         }
 
         [Fact]
-        public void TokenIsWhile(){
-            var lekser = PrepareLexer("while");
-            lekser.nextToken();
-            Assert.Equal(TokenType.While ,lekser.Token.Type );
-            Assert.Equal("while" , lekser.Token.Value );
+        public void TokenIsUndefined()
+        {
+            string s = "$";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.Undefined, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsIf(){
-            var lekser = PrepareLexer("if");
-            lekser.nextToken();
-            Assert.Equal(TokenType.If ,lekser.Token.Type );
-            Assert.Equal("if" , lekser.Token.Value );
+        public void TokenIsWhile()
+        {
+            string s = "while";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.While, lekser.Token.Type);
+                Assert.Equal("while", lekser.Token.Value);
+            }
         }
 
         [Fact]
-        public void TokenIsTurtle(){
-            var lekser = PrepareLexer("turtle");
-            lekser.nextToken();
-            Assert.Equal(TokenType.Turtle ,lekser.Token.Type );
-            Assert.Equal("turtle" , lekser.Token.Value );
+        public void TokenIsIf()
+        {
+            string s = "if";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.If, lekser.Token.Type);
+                Assert.Equal("if", lekser.Token.Value);
+            }
         }
 
         [Fact]
-        public void TokenIsIntegerId(){
-            var lekser = PrepareLexer("int");
-            lekser.nextToken();
-            Assert.Equal(TokenType.IntegerId ,lekser.Token.Type );
-            Assert.Equal("int" , lekser.Token.Value );
+        public void TokenIsTurtle()
+        {
+            string s = "turtle";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.Turtle, lekser.Token.Type);
+                Assert.Equal("turtle", lekser.Token.Value);
+            }
         }
 
         [Fact]
-        public void TokenIsStringId(){
-            var lekser = PrepareLexer("string");
-            lekser.nextToken();
-            Assert.Equal(TokenType.StringId ,lekser.Token.Type );
-            Assert.Equal("string" , lekser.Token.Value );
+        public void TokenIsIntegerId()
+        {
+            string s = "int";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.IntegerId, lekser.Token.Type);
+                Assert.Equal("int", lekser.Token.Value);
+            }
         }
 
         [Fact]
-        public void TokenIsClass(){
-            var lekser = PrepareLexer("class");
-            lekser.nextToken();
-            Assert.Equal(TokenType.Class ,lekser.Token.Type );
-            Assert.Equal("class" , lekser.Token.Value );
+        public void TokenIsStringId()
+        {
+            string s = "string";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.StringId, lekser.Token.Type);
+                Assert.Equal("string", lekser.Token.Value);
+            }
         }
 
         [Fact]
-        public void TokenIsReturn(){
-            var lekser = PrepareLexer("return");
-            lekser.nextToken();
-            Assert.Equal(TokenType.Return ,lekser.Token.Type );
-            Assert.Equal("return" , lekser.Token.Value );
+        public void TokenIsClass()
+        {
+            string s = "class";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.Class, lekser.Token.Type);
+                Assert.Equal("class", lekser.Token.Value);
+            }
         }
 
         [Fact]
-        public void TokenIsDef(){
-            var lekser = PrepareLexer("def");
-            lekser.nextToken();
-            Assert.Equal(TokenType.Def ,lekser.Token.Type );
-            Assert.Equal("def" , lekser.Token.Value );
+        public void TokenIsReturn()
+        {
+            string s = "return";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.Return, lekser.Token.Type);
+                Assert.Equal("return", lekser.Token.Value);
+            }
         }
 
         [Fact]
-        public void TokenIsComma(){
-            var lekser = PrepareLexer(",");
-            lekser.nextToken();
-            Assert.Equal(TokenType.Comma ,lekser.Token.Type );
+        public void TokenIsDef()
+        {
+            string s = "def";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.Def, lekser.Token.Type);
+                Assert.Equal("def", lekser.Token.Value);
+            }
         }
 
         [Fact]
-        public void TokenIsSemicolon(){
-            var lekser = PrepareLexer(";");
-            lekser.nextToken();
-            Assert.Equal(TokenType.Semicolon ,lekser.Token.Type );
+        public void TokenIsComma()
+        {
+            string s = ",";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.Comma, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsParenthesesLeft(){
-            var lekser = PrepareLexer("{");
-            lekser.nextToken();
-            Assert.Equal(TokenType.ParenthesesLeft ,lekser.Token.Type );
+        public void TokenIsSemicolon()
+        {
+            string s = ";";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.Semicolon, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsParenthesesRight(){
-            var lekser = PrepareLexer("}");
-            lekser.nextToken();
-            Assert.Equal(TokenType.ParenthesesRight ,lekser.Token.Type );
+        public void TokenIsParenthesesLeft()
+        {
+            string s = "{";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.ParenthesesLeft, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsBraceLeft(){
-            var lekser = PrepareLexer("(");
-            lekser.nextToken();
-            Assert.Equal(TokenType.BraceLeft ,lekser.Token.Type );
+        public void TokenIsParenthesesRight()
+        {
+            string s = "}";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.ParenthesesRight, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsBraceRight(){
-            var lekser = PrepareLexer(")");
-            lekser.nextToken();
-            Assert.Equal(TokenType.BraceRight ,lekser.Token.Type );
+        public void TokenIsBraceLeft()
+        {
+            string s = "(";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.BraceLeft, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsOrOperator(){
-            var lekser = PrepareLexer("~");
-            lekser.nextToken();
-            Assert.Equal(TokenType.OrOperator ,lekser.Token.Type );
+        public void TokenIsBraceRight()
+        {
+            string s = ")";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.BraceRight, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsAndOperator(){
-            var lekser = PrepareLexer("^");
-            lekser.nextToken();
-            Assert.Equal(TokenType.AndOperator ,lekser.Token.Type );
+        public void TokenIsOrOperator()
+        {
+            string s = "~";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.OrOperator, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsNegationOperator(){
-            var lekser = PrepareLexer("!");
-            lekser.nextToken();
-            Assert.Equal(TokenType.NegationOperator ,lekser.Token.Type );
+        public void TokenIsAndOperator()
+        {
+            string s = "^";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.AndOperator, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsAssignment(){
-            var lekser = PrepareLexer("=");
-            lekser.nextToken();
-            Assert.Equal(TokenType.Assignment ,lekser.Token.Type );
+        public void TokenIsNegationOperator()
+        {
+            string s = "!";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+
+                lekser.nextToken();
+                Assert.Equal(TokenType.NegationOperator, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsEqualityOperator(){
-            var lekser = PrepareLexer("==");
-            lekser.nextToken();
-            Assert.Equal(TokenType.EqualityOperator ,lekser.Token.Type );
+        public void TokenIsAssignment()
+        {
+            string s = "=";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+
+                lekser.nextToken();
+                Assert.Equal(TokenType.Assignment, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsInequalityOperator(){
-            var lekser = PrepareLexer("!=");
-            lekser.nextToken();
-            Assert.Equal(TokenType.InequalityOperator ,lekser.Token.Type );
+        public void TokenIsEqualityOperator()
+        {
+            string s = "==";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.EqualityOperator, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsGreaterOperator(){
-            var lekser = PrepareLexer(">");
-            lekser.nextToken();
-            Assert.Equal(TokenType.GreaterOperator ,lekser.Token.Type );
+        public void TokenIsInequalityOperator()
+        {
+            string s = "!=";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.InequalityOperator, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsGreaterOrEqualOperator(){
-            var lekser = PrepareLexer(">=");
-            lekser.nextToken();
-            Assert.Equal(TokenType.GreaterOrEqualOperator ,lekser.Token.Type );
+        public void TokenIsGreaterOperator()
+        {
+            string s = ">";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.GreaterOperator, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsLessOperator(){
-            var lekser = PrepareLexer("<");
-            lekser.nextToken();
-            Assert.Equal(TokenType.LessOperator ,lekser.Token.Type );
+        public void TokenIsGreaterOrEqualOperator()
+        {
+            string s = ">=";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.GreaterOrEqualOperator, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsLessOrEqualOperator(){
-            var lekser = PrepareLexer("<=");
-            lekser.nextToken();
-            Assert.Equal(TokenType.LessOrEqualOperator ,lekser.Token.Type );
+        public void TokenIsLessOperator()
+        {
+            string s = "<";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.LessOperator, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsPlusOperator(){
-            var lekser = PrepareLexer("+");
-            lekser.nextToken();
-            Assert.Equal(TokenType.PlusOperator ,lekser.Token.Type );
+        public void TokenIsLessOrEqualOperator()
+        {
+            string s = "<=";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.LessOrEqualOperator, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsMinusOperator(){
-            var lekser = PrepareLexer("-");
-            lekser.nextToken();
-            Assert.Equal(TokenType.MinusOperator ,lekser.Token.Type );
+        public void TokenIsPlusOperator()
+        {
+            string s = "+";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.PlusOperator, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsAsteriskOperator(){
-            var lekser = PrepareLexer("*");
-            lekser.nextToken();
-            Assert.Equal(TokenType.AsteriskOperator ,lekser.Token.Type );
+        public void TokenIsMinusOperator()
+        {
+            string s = "-";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.MinusOperator, lekser.Token.Type);
+            }
         }
 
         [Fact]
-        public void TokenIsSlashOperator(){
-            var lekser = PrepareLexer("/");
-            lekser.nextToken();
-            Assert.Equal(TokenType.SlashOperator ,lekser.Token.Type );
+        public void TokenIsAsteriskOperator()
+        {
+            string s = "*";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.AsteriskOperator, lekser.Token.Type);
+            }
+        }
+
+        [Fact]
+        public void TokenIsSlashOperator()
+        {
+            string s = "/";
+            using (var stream = new StringReader(s))
+            {
+                Lexer lekser = new Lexer(stream);
+                lekser.nextToken();
+                Assert.Equal(TokenType.SlashOperator, lekser.Token.Type);
+            }
         }
     }
 }
