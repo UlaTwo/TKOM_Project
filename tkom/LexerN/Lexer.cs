@@ -8,10 +8,14 @@ namespace tkom.LexerN
 {
     public class Lexer
     {
-        public ISource source { get; private set; }
-        public Lexer(ISource source)
+        public Source source { get; private set; }
+        public Lexer(TextReader reader)
         {
-            this.source = source;
+            this.source = new Source(reader);
+            this.KeywordsMapInitialization();
+        }
+        private void KeywordsMapInitialization()
+        {
             KeywordsMap = new Dictionary<string, TokenType>();
 
             KeywordsMap["while"] = TokenType.While;
@@ -25,7 +29,6 @@ namespace tkom.LexerN
             KeywordsMap["return"] = TokenType.Return;
             KeywordsMap["def"] = TokenType.Def;
         }
-
         private Dictionary<string, TokenType> KeywordsMap;
         private const int MAX_LENGTH = 50;
         private const int MAX_NUMBER_LENGTH = 9;
@@ -34,11 +37,13 @@ namespace tkom.LexerN
         public void nextToken()
         {
             //pominięcie białych znków
-            while (Char.IsWhiteSpace(source.character) && source.isEnd == false) { source.Read(); }
+            while (Char.IsWhiteSpace(source.character) ) { source.Read(); }
 
-            if (source.isEnd)
+            Position pos = source.position;
+
+            if (source.character == '\0')
             {
-                Token = new Token(TokenType.EOT, source.Line, source.Column);
+                Token = new Token(TokenType.EOT, pos);
                 return;
             }
 
@@ -49,14 +54,14 @@ namespace tkom.LexerN
             if (tryToBuildSingleOrDoubleCharToken())
                 return;
 
-            Token = new Token(TokenType.Undefined, source.Line, source.Column);
+            Token = new Token(TokenType.Undefined, pos);
             source.Read();
             return;
         }
 
         private bool tryToBuildIdentifierOrKeyword()
         {
-
+            Position pos = new Position(source.position.Line, source.position.Column);
             if (Char.IsLetter(source.character))
             {
                 var buf = new StringBuilder();
@@ -65,19 +70,19 @@ namespace tkom.LexerN
                     buf.Append((char)source.character);
                     source.Read();
                     if (buf.ToString().Length > MAX_LENGTH)
-                        throw new LexicalException("Exception: Too long identifier, in line: " + source.Line);
+                        throw new LexicalException("Exception: Too long identifier, in line: " + source.position.Line);
                 }
                 if (KeywordsMap.ContainsKey(buf.ToString()))
-                    Token = new Token(KeywordsMap[buf.ToString()], buf.ToString(), source.Line, source.Column - buf.ToString().Length);
+                    Token = new Token(KeywordsMap[buf.ToString()], buf.ToString(), pos);
                 else
-                    Token = new Token(TokenType.Identifier, buf.ToString(), source.Line, source.Column - buf.ToString().Length);
+                    Token = new Token(TokenType.Identifier, buf.ToString(), pos);
                 return true;
             }
             else return false;
         }
         private bool tryToBuildNumber()
         {
-
+            Position pos = new Position(source.position.Line, source.position.Column);
             if (Char.IsDigit(source.character))
             {
                 var buf = new StringBuilder();
@@ -90,20 +95,20 @@ namespace tkom.LexerN
                     source.Read();
                     if (!char.IsDigit(source.character))
                     {
-                        Token = new Token(TokenType.Integer, "0", source.Line, source.Column);
+                        Token = new Token(TokenType.Integer, "0", pos);
                         return true;
                     }
                     else
-                        throw new LexicalException("Exception: Integer can't start from 0, in line: " + source.Line + " column: " + source.Column);
+                        throw new LexicalException("Exception: Integer can't start from 0, in line: " + source.position.Line + " column: " + source.position.Column);
                 }
                 while (char.IsDigit(source.character))
                 {
                     buf.Append((char)source.character);
                     source.Read();
                     if (buf.ToString().Length > MAX_NUMBER_LENGTH)
-                        throw new LexicalException("Exception: Too long integer, in line: " + source.Line);
+                        throw new LexicalException("Exception: Too long integer, in line: " + source.position.Line);
                 }
-                Token = new Token(TokenType.Integer, buf.ToString(), source.Line, source.Column - buf.ToString().Length);
+                Token = new Token(TokenType.Integer, buf.ToString(), pos);
                 return true;
 
             }
@@ -112,42 +117,41 @@ namespace tkom.LexerN
 
         private bool tryToBuildSingleOrDoubleCharToken()
         {
-            int line = source.Line;
-            int col = source.Column;
+            Position pos = new Position(source.position.Line, source.position.Column);
             switch (source.character)
             {
                 case '=':
                     source.Read();
-                    if (source.character == '=') { Token = new Token(TokenType.EqualityOperator, "==", line, col); source.Read(); }
-                    else Token = new Token(TokenType.Assignment, "=", line, col);
+                    if (source.character == '=') { Token = new Token(TokenType.EqualityOperator, "==", pos); source.Read(); }
+                    else Token = new Token(TokenType.Assignment, "=", pos);
                     return true;
                 case '>':
                     source.Read();
-                    if (source.character == '=') { Token = new Token(TokenType.GreaterOrEqualOperator, ">=", line, col); source.Read(); }
-                    else Token = new Token(TokenType.GreaterOperator, ">", line, col);
+                    if (source.character == '=') { Token = new Token(TokenType.GreaterOrEqualOperator, ">=", pos); source.Read(); }
+                    else Token = new Token(TokenType.GreaterOperator, ">", pos);
                     return true;
                 case '<':
                     source.Read();
-                    if (source.character == '=') { Token = new Token(TokenType.LessOrEqualOperator, "<=", line, col); source.Read(); }
-                    else Token = new Token(TokenType.LessOperator, "<", line, col);
+                    if (source.character == '=') { Token = new Token(TokenType.LessOrEqualOperator, "<=", pos); source.Read(); }
+                    else Token = new Token(TokenType.LessOperator, "<", pos);
                     return true;
                 case '!':
                     source.Read();
-                    if (source.character == '=') { Token = new Token(TokenType.InequalityOperator, "!=", line, col); source.Read(); }
-                    else Token = new Token(TokenType.NegationOperator, "!", line, col);
+                    if (source.character == '=') { Token = new Token(TokenType.InequalityOperator, "!=", pos); source.Read(); }
+                    else Token = new Token(TokenType.NegationOperator, "!", pos);
                     return true;
-                case '{': source.Read(); Token = new Token(TokenType.ParenthesesLeft, "{", line, col); return true;
-                case '}': source.Read(); Token = new Token(TokenType.ParenthesesRight, "}",line, col); return true;
-                case '(': source.Read(); Token = new Token(TokenType.BraceLeft, "(", line, col); return true;
-                case ')': source.Read(); Token = new Token(TokenType.BraceRight, ")", line, col); return true;
-                case '+': source.Read(); Token = new Token(TokenType.PlusOperator, "+",line, col); return true;
-                case '-': source.Read(); Token = new Token(TokenType.MinusOperator, "-", line, col); return true;
-                case '*': source.Read(); Token = new Token(TokenType.AsteriskOperator, "*", line, col); return true;
-                case '/': source.Read(); Token = new Token(TokenType.SlashOperator, "/", line, col); return true;
-                case ',': source.Read(); Token = new Token(TokenType.Comma, ",", line, col); return true;
-                case ';': source.Read(); Token = new Token(TokenType.Semicolon, ";", line, col); return true;
-                case '^': source.Read(); Token = new Token(TokenType.AndOperator, "^", line, col); return true;
-                case '~': source.Read(); Token = new Token(TokenType.OrOperator, "~", line, col); return true;
+                case '{': source.Read(); Token = new Token(TokenType.ParenthesesLeft, "{", pos); return true;
+                case '}': source.Read(); Token = new Token(TokenType.ParenthesesRight, "}", pos); return true;
+                case '(': source.Read(); Token = new Token(TokenType.BraceLeft, "(", pos); return true;
+                case ')': source.Read(); Token = new Token(TokenType.BraceRight, ")", pos); return true;
+                case '+': source.Read(); Token = new Token(TokenType.PlusOperator, "+", pos); return true;
+                case '-': source.Read(); Token = new Token(TokenType.MinusOperator, "-", pos); return true;
+                case '*': source.Read(); Token = new Token(TokenType.AsteriskOperator, "*", pos); return true;
+                case '/': source.Read(); Token = new Token(TokenType.SlashOperator, "/", pos); return true;
+                case ',': source.Read(); Token = new Token(TokenType.Comma, ",", pos); return true;
+                case ';': source.Read(); Token = new Token(TokenType.Semicolon, ";", pos); return true;
+                case '^': source.Read(); Token = new Token(TokenType.AndOperator, "^", pos); return true;
+                case '~': source.Read(); Token = new Token(TokenType.OrOperator, "~", pos); return true;
                 default: return false;
             }
         }

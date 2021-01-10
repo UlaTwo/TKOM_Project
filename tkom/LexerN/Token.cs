@@ -3,42 +3,41 @@ using System;
 
 namespace tkom.LexerN
 {
-        public enum TokenType
-        {
-            EOT,
-            Identifier,
-            Undefined,
-            While, If,
-            Turtle, IntegerId, Integer, StringId,
-            Class, Return, Def,
-            Comma, Semicolon, ParenthesesLeft, ParenthesesRight, BraceLeft, BraceRight,
-            OrOperator, AndOperator, NegationOperator,
-            Assignment, EqualityOperator, InequalityOperator, GreaterOperator, GreaterOrEqualOperator, LessOperator, LessOrEqualOperator,
-            PlusOperator, MinusOperator, AsteriskOperator, SlashOperator
+    public enum TokenType
+    {
+        EOT,
+        Identifier,
+        Undefined,
+        While, If,
+        Turtle, IntegerId, Integer, StringId,
+        Class, Return, Def,
+        Comma, Semicolon, ParenthesesLeft, ParenthesesRight, BraceLeft, BraceRight,
+        OrOperator, AndOperator, NegationOperator,
+        Assignment, EqualityOperator, InequalityOperator, GreaterOperator, GreaterOrEqualOperator, LessOperator, LessOrEqualOperator,
+        PlusOperator, MinusOperator, AsteriskOperator, SlashOperator
 
-            //Red, Blue, Yellow, Black, White
-        }
+        //Red, Blue, Yellow, Black, White
+    }
     public class Token
     {
 
         public TokenType Type { private set; get; }
         public string Value { private set; get; }
-        public int Line { private set; get; }
-        public int Column { private set; get; }
 
-        public Token(TokenType type, int line, int column)
+        public Position position { get; set; }
+
+        public Token(TokenType type, Position pos)
         {
             Type = type;
-            Column = column;
-            Line = line;
+            position = pos;
+
         }
 
-        public Token(TokenType type, string value, int line, int column)
+        public Token(TokenType type, string value, Position pos)
         {
             Type = type;
             Value = value;
-            Column = column;
-            Line = line;
+            position = pos;
         }
 
     }

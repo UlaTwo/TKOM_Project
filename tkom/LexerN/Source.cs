@@ -4,105 +4,44 @@ using System.IO;
 
 namespace tkom.LexerN
 {
-
-    public interface ISource
+    public class Source
     {
-        char character { get; }
-        bool isEnd { get; }
-        int Line { get; }
-        int Column { get; }
-        void Read();
-    }
-
-
-    public class StringSource : ISource
-    {
-        private string myString;
-        private int position;
-        public StringSource(string s)
+        public char character { get; set; }
+        public Position position { get; set; }
+        public TextReader reader;
+        public Source(TextReader source)
         {
-            Line = 1;
-            character = ' ';
-            Column = 0;
-            myString = s;
-            position = 0;
-            isEnd = false;
+            character = ' '; /// też rozdzielić na oddzielne metody 
+            position = new Position(1, 0);
+            reader = source;
         }
-        public char character { get; private set; }
-        public int Line { get; private set; }
-        public int Column { get; private set; }
-        public bool isEnd { get; private set; }
         public void Read()
         {
-            if (myString.Length <= position)
+            int znak = reader.Read();
+
+            if (znak == -1)
             {
-                character = ' ';
-                isEnd = true;
+                character = '\0';
             }
             else
             {
-                character = myString[position];
-                position++;
-            }
-            if (character == '\n')
-            {
-                Line += 1;
-                Column = 0;
-            }
-            else
-            {
-                Column += 1;
+                character = Convert.ToChar(znak); //wyrzucić convert
+
+                if (character == (Int32)'\n')
+                {
+                    position.IncrementNewLine();
+                }
+                else
+                {
+                    position.IncrementNextInLine();
+                }
             }
         }
     }
-
-    public class FileSource : ISource
+    class SourceException : Exception
     {
-        private StreamReader reader;
-
-        public char character { get; private set; }
-        public int Line { get; private set; }
-        public int Column { get; private set; }
-        public bool isEnd { get; private set; }
-
-        public FileSource(string path)
-        {
-            if (File.Exists(path))
-                reader = new StreamReader(path);
-            else
-                throw new SourceException("Exception: There is no file with path: " + path);
-            Line = 1;
-            character = ' ';
-            Column = 0;
-            isEnd = false;
-        }
-
-
-        public void Read()
-        {
-            if (reader.EndOfStream){
-                 character = ' ';
-                isEnd = true;
-            }
-            else character =  Convert.ToChar(reader.Read());
-
-            if (character == '\n')
-            {
-                Line += 1;
-                Column = 0;
-            }
-            else
-            {
-                Column += 1;
-            }
-
-        }
-    }
-
-        class SourceException : Exception
-    {
-        public SourceException() {}
+        public SourceException() { }
         public SourceException(string message) : base(message) { }
-        public SourceException(string message, Exception inner) : base(message,inner) { }
+        public SourceException(string message, Exception inner) : base(message, inner) { }
     }
 }
