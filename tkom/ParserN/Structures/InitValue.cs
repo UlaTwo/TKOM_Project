@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using tkom.InterpreterN;
 
 namespace tkom.ParserN.Structures
 {
@@ -21,5 +22,15 @@ namespace tkom.ParserN.Structures
             InitedValue.ConsoleWrite();
         }
 
+        public void Execute(Scope scp, List<FunctionDeclaration> Functions){
+
+            ///w evaluate chcemy jeszcze wiedzieć, czy ma być zwrócony string czy int
+            VarDeclaration varDeclared = scp.GetVar(Identifier); 
+            string type = ""; //typ jaki chcemy dostać
+            if(varDeclared is Value || varDeclared is StringVarDeclaration || varDeclared is TurtleVarDeclaration ) type ="string";
+            if(varDeclared is IntVarDeclaration || varDeclared is IntegerValue) type = "int";
+            VarDeclaration inited = InitedValue.Evaluate(scp,Functions, type);
+            scp.UpdateVar(Identifier, inited);
+        }
     }
 }

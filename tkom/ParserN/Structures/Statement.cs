@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using tkom.InterpreterN;
 
 namespace tkom.ParserN.Structures
 {
@@ -27,6 +28,24 @@ namespace tkom.ParserN.Structures
             this.Condition.ConsoleWrite();
             Console.WriteLine("Instructions: ");
             foreach (IInstruction a in this.Instructions) a.ConsoleWrite();
+        }
+
+        public void Execute(Scope scp, List<FunctionDeclaration> Functions)
+        {
+            if (Type == "if")
+            {
+                if (Condition.CheckCondition(scp, Functions))
+                {
+                    foreach (IInstruction i in Instructions) i.Execute(scp, Functions);
+                }
+            }
+            if (Type == "while")
+            {
+                while (Condition.CheckCondition(scp, Functions))
+                {
+                    foreach (IInstruction i in Instructions) i.Execute(scp, Functions);
+                }
+            }
         }
 
     }
