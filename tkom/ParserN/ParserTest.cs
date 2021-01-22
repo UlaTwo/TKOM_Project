@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using System.Text;
-using System.Collections.Generic;
 using tkom.LexerN;
 using tkom.ParserN.Structures;
 
@@ -11,27 +9,34 @@ namespace tkom.ParserN
     {
         public void ParserTestFile(string path)
         {
-            if (!File.Exists(path))
-                throw new SourceException("Exception: There is no file with path: " + path);
-            using (var stream = new StreamReader(path))
+            try
             {
-                Lexer leks = new Lexer(stream);
-                Parser parser = new Parser(leks);
-                ProgramStructure program = new ProgramStructure();
-                try
+                if (!File.Exists(path))
+                    throw new SourceException("Exception: There is no file with path: " + path);
+                using (var stream = new StreamReader(path))
                 {
-                    program = parser.ParseProgram();
+                    Lexer leks = new Lexer(stream);
+                    Parser parser = new Parser(leks);
+                    ProgramStructure program = new ProgramStructure();
+                    try
+                    {
+                        program = parser.ParseProgram();
+                    }
+                    catch (ParserException e)
+                    {
+                        Console.WriteLine(e.Message);
+                        return;
+                    }
+                    Console.WriteLine("Przeprasowano! :D ");
+                    Console.WriteLine("Oto program: ");
+                    Console.WriteLine("| "); Console.WriteLine("| ");
+                    program.ConsoleWrite();
                 }
-                catch (ParserException e)
-                {
-                    Console.WriteLine(e.Message);
-                    return;
-                }
-                Console.WriteLine("Przeprasowano! :D ");
-                Console.WriteLine("Oto program: ");
-                Console.WriteLine("| "); Console.WriteLine("| ");
-                program.ConsoleWrite();
-
+            }
+            catch (SourceException e)
+            {
+                Console.WriteLine(e.Message);
+                return;
             }
         }
     }
