@@ -10,13 +10,11 @@ namespace tkom.LexerN
         Undefined,
         While, If,
         Turtle, IntegerId, Integer, StringId,
-        Class, Return, Def,
+         Return, Def,
         Comma, Semicolon, ParenthesesLeft, ParenthesesRight, BraceLeft, BraceRight,
         OrOperator, AndOperator, NegationOperator,
         Assignment, EqualityOperator, InequalityOperator, GreaterOperator, GreaterOrEqualOperator, LessOperator, LessOrEqualOperator,
         PlusOperator, MinusOperator, AsteriskOperator, SlashOperator
-
-        //Red, Blue, Yellow, Black, White
     }
     public class Token
     {

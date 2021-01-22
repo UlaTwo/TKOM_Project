@@ -25,8 +25,6 @@ namespace tkom.LexerN
             KeywordsMap["int"] = TokenType.IntegerId;
             KeywordsMap["string"] = TokenType.StringId;
 
-            KeywordsMap["class"] = TokenType.Class;
-            KeywordsMap["return"] = TokenType.Return;
             KeywordsMap["def"] = TokenType.Def;
         }
         private Dictionary<string, TokenType> KeywordsMap;

@@ -11,7 +11,7 @@ namespace tkom.LexerN
         public TextReader reader;
         public Source(TextReader source)
         {
-            character = ' '; /// też rozdzielić na oddzielne metody 
+            character = ' ';
             position = new Position(1, 0);
             reader = source;
         }
@@ -25,7 +25,7 @@ namespace tkom.LexerN
             }
             else
             {
-                character = Convert.ToChar(znak); //wyrzucić convert
+                character = Convert.ToChar(znak);
 
                 if (character == (Int32)'\n')
                 {
