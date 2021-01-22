@@ -1,8 +1,11 @@
-# TKOM_Project
+# TKOM_Project - kompilator języka umożliwiającego rysowanie obiektów graficznych
 #### Uruchamianie projektu:
 
-- Przetestowania działania leksera(po zmianie ścieżki na ./tkom.Test): 
+- Uruchomienie testów (po zmianie ścieżki na ./tkom.Test): 
   >dotnet test
+  
+- Uruchomienie interpretere (po zmianie ścieżki na ./tkom):
+  >dotnet run -tif ścieżka_do_pliku/nazwa_pliku.txt
 
 
 - Uruchomienie leksera (po zmianie ścieżki na ./tkom):
