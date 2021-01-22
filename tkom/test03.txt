@@ -1,1 +1,27 @@
-nazwa1234 = 1234567891;
+def turtleFun(turtle tu){
+    tu{
+        create(200,200);
+        printCoordinates();
+    };
+    int a;
+    a=0;
+    while(a<40){
+         tu{
+            change(a*10,a*10);
+        square(200,red);
+        forward(100,290,blue);
+        circle(150, yellow);
+        };
+        a = a+1;
+    };
+}
+
+def go() {
+    int a;
+    int b;
+    turtle t;
+    b=2;
+    a = b;
+
+    turtleFun(t);
+}

@@ -1,34 +1,17 @@
-class klasa1 {
-    turtle t1;
-    int x;
-    def initKlasa1(){
-        x = 15;
-        t1{
-            create(x,x,red);            
-        }
-    }
-
-    def rysuj(int a){
-        t1{
-            forward(a);
-            rotate(45);
-            forward(a);
-        }
-    }
+def int fun(){
+    return(2);
 }
 
-def int dodaj(int b){
-    return b+b;
+def int funa(int c){
+    return(c);
 }
 
-def go(string gif){
-    class klasa1 obiektK1;
-    int y;
-    y=6;
-    save();
-    obiektK1{
-        initKlasa1();
-        rysuj(dodaj(y));
-    }
-    save();
+def go() {
+    int a;
+    int c;
+    int b;
+    b=2;
+    a = b;
+    printI(1+fun()/funa(b+3));
+    printI();
 }

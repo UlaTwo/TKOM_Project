@@ -1,0 +1,17 @@
+def go(){
+    turtle tu;
+    tu{
+        create(0,100);
+        forward(50,45,red);
+        ellipse(100,130,yellow);
+        forward(100,0,green);
+        circle(60,orange);
+        change(200,200);
+        square(90,blue);
+        forward(50,45,red);
+        triangle(10,30,230,-20,black);
+        forward(100,290,red);
+        rectangle(100,300,green);
+        printCoordinates();
+    };
+}

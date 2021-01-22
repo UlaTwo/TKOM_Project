@@ -1,8 +1,15 @@
-class nazwa {
+def fun(int a, string s){
+
+    printI(a);
+    printS(s);
+    return(a);
+}
+
+def go() {
     int a;
-    def fun(){
-        while(a==4^c>f){
-        a= 4-d*f;
-        };
-    };
+    a = 5;
+    string c;
+    c = commit;
+    turtle ti;
+    fun(a, c);
 }

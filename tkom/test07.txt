@@ -1,0 +1,9 @@
+def go(){
+    int a;
+    int b;
+    a=3+;
+    b=4;
+    if(((a+3<8))^(b-3>0)){
+        printS(Fajno);
+    };
+}

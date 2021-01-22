@@ -1,1 +1,18 @@
-if( x > wwwwweeeeewwwwweeeeewwwwweeeeewwwwweeeeewwwwweeeeewwwwweeeeewwwwweeeee)
+def go() {
+    int a;
+    int b;
+    b = 2;
+    a = b;
+    int c;
+    c=0;
+    a = b/c;
+    if((a==b)^(a>b)){
+        printI(a+b);
+    };
+    printS(cos);
+    a=0;
+    while(a<5){
+        printI(a);
+        a=a+1;
+    };
+}
