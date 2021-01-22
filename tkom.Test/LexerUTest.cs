@@ -213,31 +213,6 @@ namespace tkom.Test
             }
         }
 
-        [Fact]
-        public void TokenIsClass()
-        {
-            string s = "class";
-            using (var stream = new StringReader(s))
-            {
-                Lexer lekser = new Lexer(stream);
-                lekser.nextToken();
-                Assert.Equal(TokenType.Class, lekser.Token.Type);
-                Assert.Equal("class", lekser.Token.Value);
-            }
-        }
-
-        [Fact]
-        public void TokenIsReturn()
-        {
-            string s = "return";
-            using (var stream = new StringReader(s))
-            {
-                Lexer lekser = new Lexer(stream);
-                lekser.nextToken();
-                Assert.Equal(TokenType.Return, lekser.Token.Type);
-                Assert.Equal("return", lekser.Token.Value);
-            }
-        }
 
         [Fact]
         public void TokenIsDef()

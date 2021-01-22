@@ -5,7 +5,6 @@ using tkom.ParserN.Structures;
 using tkom.LexerN;
 using System.IO;
 using System.Linq;
-
 namespace tkom.Test
 {
     public class ParserUTest
@@ -26,7 +25,6 @@ namespace tkom.Test
             {
                 ProgramStructure program = returnProgram(stream);
                 Assert.Empty(program.Functions);
-                Assert.Empty(program.Classes);
             }
         }
 
@@ -38,7 +36,6 @@ namespace tkom.Test
             {
                 ProgramStructure program = returnProgram(stream);
                 Assert.Single(program.Functions);
-                Assert.Empty(program.Classes);
 
                 Assert_EmptyFunctionDeclaration("fun", program.Functions.First(), true);
             }
@@ -52,7 +49,6 @@ namespace tkom.Test
             {
                 ProgramStructure program = returnProgram(stream);
                 Assert.Equal(2, program.Functions.Count);
-                Assert.Empty(program.Classes);
 
                 Assert_EmptyFunctionDeclaration("fun1", program.Functions.First(), true);
                 Assert_EmptyFunctionDeclaration("fun2", program.Functions.Skip(1).First(), false);
@@ -60,31 +56,15 @@ namespace tkom.Test
         }
 
         [Fact]
-        public void EmptyClass_Parse()
+        public void EmptyFunc_Parse()
         {
-            string s = "class klasa1\n{\n }\n";
-            using (var stream = new StringReader(s))
-            {
-                ProgramStructure program = returnProgram(stream);
-                Assert.Empty(program.Functions);
-                Assert.Single(program.Classes);
-
-                Assert_EmptyClassDeclaration("klasa1", program.Classes[0]);
-            }
-        }
-
-        [Fact]
-        public void EmptyFunctionAndEmptyClass_Parse()
-        {
-            string s = "\n class klasa1\n{\n }\ndef int fun1 ()\n{\n }";
+            string s = "\n\ndef int fun1 ()\n{\n }";
             using (var stream = new StringReader(s))
             {
                 ProgramStructure program = returnProgram(stream);
                 Assert.Single(program.Functions);
-                Assert.Single(program.Classes);
 
                 Assert_EmptyFunctionDeclaration("fun1", program.Functions.First(), true);
-                Assert_EmptyClassDeclaration("klasa1", program.Classes[0]);
             }
         }
 
@@ -92,12 +72,11 @@ namespace tkom.Test
         [Fact]
         public void SimpleFunctionWithVarDeclaration_Parse()
         {
-            string s = "def main (string gif){\nint a;\nclass nazwaKlasy b;\n}";
+            string s = "def main (string gif){\nint a;\n}";
             using (var stream = new StringReader(s))
             {
                 ProgramStructure program = returnProgram(stream);
                 Assert.NotEmpty(program.Functions);
-                Assert.Empty(program.Classes);
                 Assert.Equal("main", program.Functions.First().Identifier);
                 //arguments
                 Assert.NotEmpty(program.Functions.First().Arguments);
@@ -108,48 +87,6 @@ namespace tkom.Test
                 Assert.IsType<IntVarDeclaration>(program.Functions.First().Instructions.First());
                 IntVarDeclaration intVar = (IntVarDeclaration)program.Functions.First().Instructions.First();
                 Assert.Equal("a", intVar.Identifier);
-                //second instruction
-                Assert.IsType<ClassVarDeclaration>(program.Functions.First().Instructions.Skip(1).First());
-                ClassVarDeclaration classVar = (ClassVarDeclaration)program.Functions.First().Instructions.Skip(1).First();
-                Assert.Equal("b", classVar.Identifier);
-                Assert.Equal("nazwaKlasy", classVar.ClassName);
-            }
-        }
-
-        [Fact]
-        public void SimpleClass_Parse()
-        {
-            string s = "class nazwaKlasy {\nint a;\ndef fun(){a=6;};\n}";
-            using (var stream = new StringReader(s))
-            {
-                ProgramStructure program = returnProgram(stream);
-
-                Assert.Empty(program.Functions);
-                Assert.NotEmpty(program.Classes);
-                // //class
-                Assert.Equal("nazwaKlasy", program.Classes[0].Name);
-                Assert.IsType<IntVarDeclaration>(program.Classes[0].ClassInstructions[0]);
-                Assert.IsType<FunctionDeclaration>(program.Classes[0].ClassInstructions[1]);
-
-                IntVarDeclaration intVar = (IntVarDeclaration)program.Classes[0].ClassInstructions[0];
-                Assert.Equal("a", intVar.Identifier);
-
-                FunctionDeclaration funDec = (FunctionDeclaration)program.Classes[0].ClassInstructions[1];
-                Assert.Equal("fun", funDec.Identifier);
-                Assert.False(funDec.isIntReturned);
-                Assert.Empty(funDec.Arguments);
-                Assert.NotEmpty(funDec.Instructions);
-
-                Assert.IsType<InitValue>(funDec.Instructions[0]);
-                InitValue initVal = (InitValue)funDec.Instructions[0];
-                Assert.Equal("a", initVal.Identifier);
-
-                Assert.NotEmpty(initVal.InitedValue.ExpressionONPQueue);
-                IExpressionQueueType[] expressionA = initVal.InitedValue.ExpressionONPQueue.ToArray();
-                Assert.Single(expressionA);
-                //expressionA : [6]
-                Assert.IsType<ExpressionSingle>(expressionA[0]);
-                Assert_ExpressionSingleIntegerValue((ExpressionSingle)expressionA[0], false, 6);
             }
         }
 
@@ -162,7 +99,6 @@ namespace tkom.Test
             {
                 ProgramStructure program = returnProgram(stream);
                 Assert.NotEmpty(program.Functions);
-                Assert.Empty(program.Classes);
                 Assert.Equal("funkcja", program.Functions.First().Identifier);
                 Assert.False(program.Functions.First().isIntReturned);
                 //arguments
@@ -223,7 +159,6 @@ namespace tkom.Test
                 ProgramStructure program = returnProgram(stream);
 
                 Assert.NotEmpty(program.Functions);
-                Assert.Empty(program.Classes);
                 Assert.Equal("fun", program.Functions.First().Identifier);
                 Assert.True(program.Functions.First().isIntReturned);
 
@@ -255,10 +190,222 @@ namespace tkom.Test
             }
         }
 
-        private void Assert_EmptyClassDeclaration(string name, ClassDeclaration classDec)
-        {
-            Assert.Equal(name, classDec.Name);
-            Assert.Empty(classDec.ClassInstructions);
+        [Fact]
+        public void ExceptionErrorWithProgramConstruction(){
+            string s = "def int fun(){\nturtle t1;\nt1{\ncircle(4,red);\nsave();\n};\n} abcd";
+            using (var stream = new StringReader(s))
+            {
+                bool exceptionThrown = false;
+                try{
+                 ProgramStructure program = returnProgram(stream);
+                }
+                catch(ParserException e){
+                    exceptionThrown = true;
+                    Assert.Equal("Exception:  Error with construction of the program. Excepted EOT after all function declarations. in line: 7 in column: 3",e.Message);
+                }
+                Assert.True(exceptionThrown);
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorMissingFunctionName_ParseFunction(){
+            string s = "def (){\n}";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: ParseFunction(). Error - missing identifier (function name). in line: 1 in column: 5" );
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorMissingBraceLeft_ParseFunction(){
+            string s = "def go){\n}";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: ParseFunction(). Error - missing brace left. in line: 1 in column: 7" );
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorMissingBraceRight_ParseFunction(){
+            string s = "def go({\n}";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: ParseFunction(). Error - missing brace right.  in line: 1 in column: 8" );
+            }
+        }
+
+
+        [Fact]
+        public void ExceptionErrorMissingIdentifierName_ParseArgument(){
+            string s = "def go(){ int 456; }";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseArgument(). Error - missing identifier name.  in line: 1 in column: 15" );
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorMissingSemicolon_ParseInstructionBlock(){
+            string s = "def go(){ int a }";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseInstructionBlock(). Error - missing Semicolon.  in line: 1 in column: 17" );
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorMissingParenthesesLeft_ParseInstructionBlock(){
+            string s = "def go() int a; }";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseInstructionBlock(). Error - missing Parentheses Left.  in line: 1 in column: 10" );
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorMissingParenthesesRight_ParseInstructionBlock(){
+            string s = "def go(){ int a; ";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseInstructionBlock(). Error - missing Parentheses Right.  in line: 1 in column: 17" );
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorMissingBraceLeft_ParseStatement(){
+            string s = "def go(){ if){};}";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseStatement(). Error - missing Brace Left. in line: 1 in column: 13" );
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorMissingCondition_ParseStatement(){
+            string s = "def go(){ if(){};}";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseStatement(). Error - missing condition in statement. in line: 1 in column: 14" );
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorMissingBraceRight_ParseStatement(){
+            string s = "def go(){ if({};}";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseStatement(). Error - missing condition in statement. in line: 1 in column: 14" );
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorMissingSemicolon_ParseStatement(){
+            string s = "def go(){ if(a==3){}}";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseStatement(). Error - missing Semicolon after function declaration. in line: 1 in column: 21" );
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorIncorrectCondition_ParseCondition(){
+            string s = "def go(){ if(a==){}}";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseCondition(). The condition is not correct.  in line: 1 in column: 17" );
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorSingleNegation_ParseConditionSingle(){
+            string s = "def go(){ if(!){}}";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseConditionSingle(). Error -single negation with no expression.  in line: 1 in column: 15" );
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorMissingConditionAfterBraceLeft_ParseConditionSingle(){
+            string s = "def go(){ if(!(){}}";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseConditionSingle(). Error - missing condition after BraceLeft. in line: 1 in column: 16" );
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorMissingExpression_InitValue(){
+            string s = "def go(){ a=;}";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseInitValue(string id). Error - missing expression in line:  in line: 1 in column: 13" );
+            }
+        }
+        [Fact]
+        public void ExceptionErrorIncorrectExpression_ParseExpression(){
+            string s = "def go(){ a=1+;}";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseExpression(). Error - the expression is not correct.  in line: 1 in column: 15" );
+            }
+        }
+        [Fact]
+        public void ExceptionErrorSingleMinus_ParseExpression(){
+            string s = "def go(){ a=-;}";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseExpressionSingle(). Error - missing expression (single minus). in line: 1 in column: 14" );
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorMissingBraceRight_ParseExpression(){
+            string s = "def go(){ a=(a+b;}";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseExpressionSingle(). Error - missing BraceRight. in line: 1 in column: 17" );
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorMissingParenthasesRight_ParseObjectCall(){
+            string s = "def go(){ a{; }";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseObjectCall(string id). Error - missing Parentheses Right.  in line: 1 in column: 13" );
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorMissingSemicolon_ParseObjectCall(){
+            string s = "def go(){ a{ b() }; }";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseObjectCall(string id). Error - missing Semicolon. in line: 1 in column: 18" );
+            }
+        }
+
+        [Fact]
+        public void ExceptionErrorMissingArgument_ParseFunctionCall(){
+            string s = "def go(){ a(i,); }";
+            using (var stream = new StringReader(s))
+            {
+                Assert_Exception( stream, "Exception: tryToParseArgumentsFunctionCall. Error - missing expression after comma. in line: 1 in column: 15" );
+            }
+        }
+
+
+        private void Assert_Exception(StringReader stream, string expectedMessage ){
+            bool exceptionThrown = false;
+                try{
+                 ProgramStructure program = returnProgram(stream);
+                }
+                catch(ParserException e){
+                    exceptionThrown = true;
+                    Assert.Equal(expectedMessage,e.Message);
+                }
+                Assert.True(exceptionThrown);
         }
 
         private void Assert_EmptyFunctionDeclaration(string name, FunctionDeclaration funDec, bool isInt)
